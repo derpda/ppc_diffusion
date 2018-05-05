@@ -1,0 +1,10 @@
+**/*.o
+**/cuda
+**/omp
+**/omp_blocking
+**/simd
+**/plain
+**/core
+
+**/output_*
+**/error_*
