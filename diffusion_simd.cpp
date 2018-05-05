@@ -4,6 +4,22 @@
 #include <immintrin.h>
 #include <stdint.h>
 
+float*
+alloc_mem(size_t NX, size_t NY)
+{
+  void* data_al;
+  posix_memalign(&data_al, (size_t)32, 2*NX*NY*sizeof(float));
+  float *data = (float*)data_al;
+  return data;
+}
+
+int
+free_mem(float *data)
+{
+  free(data);
+  return 0;
+}
+
 // Uses 64bit pdep / pext to save a step in unpacking.
 __m256 compress256(__m256 src, unsigned int mask /*  from movmskps */)
 {
@@ -21,9 +37,8 @@ __m256 compress256(__m256 src, unsigned int mask /*  from movmskps */)
 }
 
 
-/* Calculate for one time step */
-/* Input: data[t%2], Output: data[(t+1)%2] */
-void calc(float* data, size_t NX, size_t NY, int n_steps)
+int
+calc(float* data, size_t NX, size_t NY, int n_steps)
 {
   for (int t = 0; t < n_steps; t++) {
     size_t from = NY*NX*(t%2);
@@ -38,9 +53,9 @@ void calc(float* data, size_t NX, size_t NY, int n_steps)
     const __m256i back_perm = _mm256_set_epi32(6, 5, 4, 3, 2, 1, 0, 7);
     const __m256 scalar = _mm256_set_ps(0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 1.0, 1.0);
 
-    //#pragma omp parallel for
+    #pragma omp parallel for
     for (size_t y = 1; y < NY-1; y++) {
-      for (size_t x = 0; x < NX-7; x+=6) {
+      for (size_t x = 0; x < NX-7; x+=8) {
         size_t current = y*NX + x;
         __m256 from_current = _mm256_load_ps(&data[from + current]);
         const __m256 from_x_minus = compress256(from_current, 0x11111100);
@@ -68,5 +83,5 @@ void calc(float* data, size_t NX, size_t NY, int n_steps)
     }
   }
 
-  return;
+  return 0;
 }

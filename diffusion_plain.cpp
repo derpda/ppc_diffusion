@@ -16,11 +16,11 @@ double get_elapsed_time(struct timeval *begin, struct timeval *end)
 
 void init()
 {
-  int cx = NX/2, cy = 0; /* center of ink */
-  int rad = (NX+NY)/8; /* radius of ink */
+  size_t cx = (size_t)NX/2, cy = 0; /* center of ink */
+  size_t rad = (size_t)(NX+NY)/8; /* radius of ink */
 
-  for(int y = 0; y < NY; y++) {
-    for(int x = 0; x < NX; x++) {
+  for(size_t y = 0; y < NY; y++) {
+    for(size_t x = 0; x < NX; x++) {
       float v = 0.0;
       if (((x-cx)*(x-cx)+(y-cy)*(y-cy)) < rad*rad) {
         v = 1.0;
@@ -32,13 +32,11 @@ void init()
   return;
 }
 
-/* Calculate for one time step */
-/* Input: data[t%2], Output: data[(t+1)%2] */
 void calc(int nt)
 {
-  int to;
+  size_t to;
   for (int t = 0; t < nt; t++) {
-    int from = t%2;
+    size_t from = t%2;
     to = (t+1)%2;
 
 #if 0
@@ -46,8 +44,8 @@ void calc(int nt)
     fflush(0);
 #endif
 
-    for (int y = 1; y < NY-1; y++) {
-      for (int x = 1; x < NX-1; x++) {
+    for (size_t y = 1; y < NY-1; y++) {
+      for (size_t x = 1; x < NX-1; x++) {
         data[to][y][x] = 0.2 * (data[from][y][x]
 				+ data[from][y][x-1]
 				+ data[from][y][x+1]
@@ -56,16 +54,11 @@ void calc(int nt)
       }
     }
   }
+#if 0
   for (int i=0; i<NY; ++i) {
     printf("%f\n", data[to][i][NX/2]);
   }
-  // printf("%f\n", data[to][NY/2-2][NX/2]);
-  // printf("%f\n", data[to][NY/2-1][NX/2]);
-  // printf("%f\n", data[to][NY/2][NX/2]);
-  // printf("%f\n", data[to][NY/2+1][NX/2]);
-  // printf("%f\n", data[to][NY/2+2][NX/2]);
-  // printf("%f\n", data[to][NY/2+3][NX/2]);
-  // printf("%f\n", data[to][NY/4][NX/2]);
+#endif
 
   return;
 }

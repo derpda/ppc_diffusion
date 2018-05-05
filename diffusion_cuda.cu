@@ -98,8 +98,10 @@ calc(float* data, size_t NX, size_t NY, int n_steps)
     size_t min = Y_min_d * NX + 1;
     size_t max = (Y_max_d) * NX - 1;
     size_t Y_range = Y_max_d - Y_min_d;
+#if 0
     printf("Device: %llu\tYmin: %llu/%llu\tYmax: %llu/%llu\n",
         device_n, Y_min_d, min, Y_max_d, max);
+#endif
     fflush(0);
 // Make sure all events and streams are created!
 #pragma omp barrier

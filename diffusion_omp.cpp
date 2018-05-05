@@ -40,9 +40,11 @@ calc(float* data, size_t NX, size_t NY, int n_steps)
       }
     }
   }
+#if 0
   for (size_t i=0; i<NY; ++i) {
     printf("%f\n", data[to + i*NX + NX/2]);
   }
+#endif
 
   return 0;
 }
