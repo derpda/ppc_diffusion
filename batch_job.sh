@@ -2,10 +2,10 @@
 
 NODE='f_node'
 H_RT='00:10:00'
-EXEC='omp'
+EXEC='plain'
 
-N_THREADS=4
-until [ $N_THREADS -gt 56 ]
+N_THREADS=1
+until [ $N_THREADS -gt 1 ]
 do
     N_BASE=100
     TIME=1
@@ -28,7 +28,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job #| qsub #-g tga-ppcomp
+            }' ./src/blank_job | qsub #-g tga-ppcomp
             ((POWER++))
         done
         ((TIME++))

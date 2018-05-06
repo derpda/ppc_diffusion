@@ -39,7 +39,7 @@ void calc(int nt)
     size_t from = t%2;
     to = (t+1)%2;
 
-#if 1
+#if 0
     printf("step %d\n", t);
     fflush(0);
 #endif
