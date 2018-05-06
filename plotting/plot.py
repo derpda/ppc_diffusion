@@ -1,10 +1,9 @@
 import os
-import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
-class results_dict(defaultdict):
 
+class results_dict(defaultdict):
     def get(self, *args):
         data = self["ALL_FILES"]
         for arg in args:
@@ -16,13 +15,12 @@ class results_dict(defaultdict):
             files = self.get(node, n_steps, NX)
             data = {}
             for path in files:
-                with open(path, "r") as handle:
-                    if(handle.readline() == ""):
-                        continue
-                    gflops = handle.readline().split(" ")[1]
                 filename = path.split('/')[-1]
                 diff_type = filename.split('.')[0]
-                data[diff_type] = gflops
+                with open(path, "r") as handle:
+                    while(handle.readline() != ""):
+                        gflops = handle.readline().split(" ")[1]
+                        data[diff_type] = gflops
         elif node is None:
             files = self.get(diff_type, n_steps, NX)
             data = {}
@@ -76,9 +74,10 @@ class results_dict(defaultdict):
             node = filename.split('.')[1]
             self[node].add(path+filename)
             n_steps = filename.split('.')[2]
-            self["N_STEPS__"+n_steps].add(path+filename)
+            self["N_STEPS_"+n_steps].add(path+filename)
             nx = filename.split('.')[3]
             self["NX_"+nx].add(path+filename)
+
 
 def load_files(rel_path):
     data = results_dict(set)
@@ -87,17 +86,21 @@ def load_files(rel_path):
     data.add_from_path(path)
     return data
 
-def main():
 
+def main():
     files = load_files('../output_files')
 
-    for key, value in files.get_gflops("cuda", "h_node", None, "NX_1024").items():
-        plt.plot(int(key), float(value))
-    plt.show
-
-
+    x_val = []
+    y_val = []
+    for key, value in files.get_gflops(
+            "cuda", "f_node", "N_STEPS_20000", None).items():
+        x_val.append(int(key))
+        y_val.append(float(value))
+    plt.plot(x_val, y_val, 'ro')
+    plt.show()
 
     return 0
+
 
 if __name__ == "__main__":
     main()
