@@ -17,6 +17,9 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cu
 plain: ${OBJ_DIR}/diffusion_plain.o
 	${CC} $^ ${LIB} -o $@ ${LDFLAGS}
 
+plain_omp: ${OBJ_DIR}/diffusion_plain_omp.o
+	${CC} $^ ${LIB} -o $@ ${LDFLAGS}
+
 omp: ${OBJ_DIR}/main.o ${OBJ_DIR}/diffusion_omp.o
 	${CC} $^ ${LIBS} -o $@ ${LDFLAGS}
 
@@ -32,6 +35,7 @@ cuda: ${OBJ_DIR}/main.o ${OBJ_DIR}/diffusion_cuda.o
 clean:
 	-rm -f diffusion
 	-rm -f plain
+	-rm -f plain_omp
 	-rm -f omp
 	-rm -f omp_blocking
 	-rm -f simd
