@@ -5,25 +5,28 @@ CUDAFLAGS = -std=c++11 -gencode=arch=compute_60,code=sm_60 -O3 -Xcompiler -fopen
 LDFLAGS = -fopenmp
 LIBS =
 
-%.o: %.cpp
-	${CC} ${CFLAGS} -c $< -o $*.o
+OBJ_DIR=obj
+SRC_DIR=src
 
-%.o: %.cu
-	${NVCC} ${CUDAFLAGS} -c $< -o $*.o
+${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
+	${CC} ${CFLAGS} -c $< -o ${OBJ_DIR}/$*.o
 
-plain: diffusion_plain.o
+${OBJ_DIR}/%.o: ${SRC_DIR}/%.cu
+	${NVCC} ${CUDAFLAGS} -c $< -o ${OBJ_DIR}/$*.o
+
+plain: ${OBJ_DIR}/diffusion_plain.o
 	${CC} $^ ${LIB} -o $@ ${LDFLAGS}
 
-omp: main.o diffusion_omp.o
+omp: ${OBJ_DIR}/main.o ${OBJ_DIR}/diffusion_omp.o
 	${CC} $^ ${LIBS} -o $@ ${LDFLAGS}
 
-omp_blocking: main.o diffusion_omp_blocking.o
+omp_blocking: ${OBJ_DIR}/main.o ${OBJ_DIR}/diffusion_omp_blocking.o
 	${CC} $^ ${LIBS} -o $@ ${LDFLAGS}
 
-simd: main.o diffusion_simd.o
+simd: ${OBJ_DIR}/main.o ${OBJ_DIR}/diffusion_simd.o
 	${CC} $^ ${LIBS} -o $@ ${LDFLAGS}
 
-cuda: main.o diffusion_cuda.o
+cuda: ${OBJ_DIR}/main.o ${OBJ_DIR}/diffusion_cuda.o
 	${NVCC} ${CUDAFLAGS} $^ ${LIBS} -o $@
 
 clean:
@@ -33,4 +36,4 @@ clean:
 	-rm -f omp_blocking
 	-rm -f simd
 	-rm -f cuda
-	-rm -f *.o
+	-rm -f ${OBJ_DIR}/*.o
