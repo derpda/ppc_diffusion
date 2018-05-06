@@ -4,6 +4,7 @@
 **/omp_blocking
 **/simd
 **/plain
+**/plain_omp
 **/core
 
 **/error_*

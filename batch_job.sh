@@ -1,19 +1,19 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:10:00'
-EXEC='plain'
+H_RT='00:30:00'
+EXEC='omp'
 
-N_THREADS=1
-until [ $N_THREADS -gt 1 ]
+N_THREADS=56
+until [ $N_THREADS -gt 56 ]
 do
     N_BASE=100
     TIME=1
     until [ $TIME -gt 10 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
-        POWER=6
-        until [ $POWER -gt 13 ]
+        POWER=14
+        until [ $POWER -gt 16 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
@@ -28,7 +28,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job | qsub #-g tga-ppcomp
+            }' ./src/blank_job | qsub -g tga-ppcomp
             ((POWER++))
         done
         ((TIME++))
