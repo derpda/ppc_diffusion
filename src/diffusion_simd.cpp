@@ -40,11 +40,12 @@ __m256 compress256(__m256 src, unsigned int mask /*  from movmskps */)
 int
 calc(float* data, size_t NX, size_t NY, int n_steps)
 {
+  size_t to;
   for (int t = 0; t < n_steps; t++) {
     size_t from = NY*NX*(t%2);
-    size_t to = NY*NX*((t+1)%2);
+    to = NY*NX*((t+1)%2);
 
-#if 1
+#if 0
     printf("step %d\n", t);
     fflush(0);
 #endif
@@ -80,8 +81,29 @@ calc(float* data, size_t NX, size_t NY, int n_steps)
         from_current = _mm256_permutevar8x32_ps(from_current, back_perm);
         _mm256_store_ps(&data[to + current], from_current);
       }
+      for (size_t x=7; x<NX-7; x+=8) {
+          size_t current = y*NX + x;
+          data[to + current] = 0.2 * (data[from + current]
+          + data[from + current - 1]
+          + data[from + current + 1]
+          + data[from + current - NX]
+          + data[from + current + NX]);
+      }
+      for (size_t x=8; x<NX-6; x+=8) {
+          size_t current = y*NX + x;
+          data[to + current] = 0.2 * (data[from + current]
+          + data[from + current - 1]
+          + data[from + current + 1]
+          + data[from + current - NX]
+          + data[from + current + NX]);
+      }
     }
   }
+#if 1
+  for (size_t i=0; i<NY; ++i) {
+    printf("%f\n", data[to + i*NX + NX/2-3]);
+  }
+#endif
 
   return 0;
 }

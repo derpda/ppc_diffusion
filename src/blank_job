@@ -1,13 +1,14 @@
 #!/bin/sh
 #$ -cwd
-#$ -l NODE=1
-#$ -l h_rt=H_RT
-#$ -N diff_EXEC
-#$ -o output_files/EXEC.JOB
-#$ -e error_files/EXEC.JOB
+#$ -l {NODE}=1
+#$ -l h_rt={H_RT}
+#$ -N diff_{EXEC}
+#$ -o output_files/{EXEC}.{JOB}
+#$ -e error_files/{EXEC}.{JOB}
 
 . /etc/profile.d/modules.sh
 module load cuda/8.0.61
 
-./EXEC N_STEPS NX NY
+export OMP_NUM_THREADS={N_THREADS}
+./{EXEC} {N_STEPS} {NX} {NY}
 
