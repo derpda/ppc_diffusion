@@ -46,12 +46,6 @@ kernel(float* data, size_t from, size_t to, size_t min, size_t max, size_t NX)
   }
 }
 
-__global__ void
-print_hi(int t, int dev)
-{
-  printf("dev: %i\tstep: %i\n", dev, t);
-}
-
 int
 calc(float* data, size_t NX, size_t NY, int n_steps)
 {

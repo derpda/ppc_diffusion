@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#define NX 16384
-#define NY 16384
+#define NX 8192
+#define NY 8192
 
 float data[2][NY][NX];
 
@@ -39,7 +39,7 @@ void calc(int nt)
     size_t from = t%2;
     to = (t+1)%2;
 
-#if 0
+#if 1
     printf("step %d\n", t);
     fflush(0);
 #endif

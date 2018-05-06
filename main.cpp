@@ -93,13 +93,6 @@ int  main(int argc, char *argv[])
     return 1;
   }
 
-  // Allocate data, 2* is for `to` and `from`
-  // float* data = (float*)malloc(2 * NX * NY * sizeof(float));
-  // Align to 32bit for faster loads
-  //void* data_al;
-  //posix_memalign(&data_al, (size_t)32, 2*NX*NY*sizeof(float));
-  //float* data = (float*)data_al;
-
   float *data = alloc_mem(NX, NY);
 
   if (init(data, NX, NY)) {
