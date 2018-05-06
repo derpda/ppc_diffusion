@@ -5,8 +5,6 @@
 #include <immintrin.h>
 #include <malloc.h>
 
-#include <omp.h>
-
 int
 calc(float* data, size_t NX, size_t NY, int n_steps);
 
@@ -87,8 +85,6 @@ init(float* data, size_t NX, size_t NY)
 
 int  main(int argc, char *argv[])
 {
-  printf("%i\n", omp_get_max_threads());
-  return 0;
   struct timeval t1, t2;
   int n_steps;
   size_t NX, NY;
