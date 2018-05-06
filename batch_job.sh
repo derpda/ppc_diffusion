@@ -2,7 +2,7 @@
 
 NODE='f_node'
 H_RT='00:30:00'
-EXEC='omp'
+EXEC='omp_blocking'
 
 N_THREADS=56
 until [ $N_THREADS -gt 56 ]
@@ -13,7 +13,7 @@ do
     do
         N_STEPS=$((${N_BASE}*${TIME}))
         POWER=14
-        until [ $POWER -gt 16 ]
+        until [ $POWER -gt 17 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
