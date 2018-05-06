@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define Y_BLOCK 8
+#define Y_BLOCK 512
 #define X_BLOCK 512
 
 float*
