@@ -2,7 +2,7 @@
 
 NODE='f_node'
 H_RT='00:10:00'
-EXEC='omp'
+EXEC='omp_blocking'
 N_THREADS=16
 
 N_BASE=100
