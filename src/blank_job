@@ -3,8 +3,8 @@
 #$ -l NODE=1
 #$ -l h_rt=H_RT
 #$ -N diff_EXEC
-#$ -o output_files/output_EXEC.JOB
-#$ -e error_files/error_EXEC.JOB
+#$ -o output_files/EXEC.JOB
+#$ -e error_files/EXEC.JOB
 
 . /etc/profile.d/modules.sh
 module load cuda/8.0.61

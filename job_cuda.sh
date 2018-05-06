@@ -9,5 +9,5 @@
 . /etc/profile.d/modules.sh
 module load cuda/8.0.61
 
-./cuda 1 131072 131072
+./cuda 8000 256 256
 
