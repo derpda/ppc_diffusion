@@ -11,21 +11,21 @@ do
     ((THREAD_CALC++))
 
     N_BASE=100
-    TIME=20
-    until [ $TIME -gt 20 ]
+    TIME=1
+    until [ $TIME -gt 1 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=13
-        until [ $POWER -gt 13 ]
+        POWER=8
+        until [ $POWER -gt 8 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
             ((POWER++))
 
             JOB="${NODE}.${N_STEPS}.${NX}.${N_THREADS}"
-            [ -e output_files/${EXEC}.${JPB} ] && rm -i output_files/${EXEC}.${JOB}
+            [ -e output_files/${EXEC}.${JOB} ] && rm -i output_files/${EXEC}.${JOB}
             awk '{
                 gsub("{NODE}","'$NODE'");
                 gsub("{H_RT}","'$H_RT'");
