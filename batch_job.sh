@@ -4,8 +4,8 @@ NODE='f_node'
 H_RT='00:10:00'
 EXEC='3d_omp'
 
-N_THREADS=1
-until [ $N_THREADS -gt 6 ]
+N_THREADS=56
+until [ $N_THREADS -lt 7 ]
 do
     N_BASE=100
     TIME=1
@@ -33,6 +33,6 @@ do
         done
         ((TIME++))
     done
-    ((N_THREADS++))
+    ((N_THREADS=N_THREADS/2))
 done
 

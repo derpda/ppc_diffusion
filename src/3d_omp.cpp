@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void calc(float*** data, size_t NX, size_t NY, int n_steps)
+int
+calc(float*** data, size_t NX, size_t NY, int n_steps)
 {
   size_t to;
   for (int t = 0; t < n_steps; t++) {
@@ -30,6 +31,6 @@ void calc(float*** data, size_t NX, size_t NY, int n_steps)
   }
 #endif
 
-  return;
+  return 0;
 }
 
