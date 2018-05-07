@@ -1,8 +1,8 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:10:00'
-EXEC='1d_omp_simd'
+H_RT='00:30:00'
+EXEC='3d_omp_blocking'
 
 THREAD_CALC=56
 until [ $THREAD_CALC -gt 56 ]
@@ -17,7 +17,7 @@ do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=14
+        POWER=16
         until [ $POWER -gt 17 ]
         do
             NX=$(echo "2^$POWER" | bc)
@@ -36,7 +36,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job | qsub #-g tga-ppcomp
+            }' ./src/blank_job | qsub -g tga-ppcomp
         done
     done
 done
