@@ -1,11 +1,11 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:10:00'
-EXEC='1d_omp_blocking'
+H_RT='00:30:00'
+EXEC='cuda'
 
-THREAD_CALC=56
-until [ $THREAD_CALC -gt 56 ]
+THREAD_CALC=4
+until [ $THREAD_CALC -gt 4 ]
 do
     N_THREADS=${THREAD_CALC}
     ((THREAD_CALC++))
@@ -18,7 +18,7 @@ do
         ((TIME++))
 
         POWER=8
-        until [ $POWER -gt 16 ]
+        until [ $POWER -gt 17 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
@@ -36,7 +36,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job | qsub #-g tga-ppcomp
+            }' ./src/blank_job | qsub -g tga-ppcomp
         done
     done
 done
