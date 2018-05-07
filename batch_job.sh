@@ -2,23 +2,23 @@
 
 NODE='f_node'
 H_RT='00:10:00'
-EXEC='3d_omp'
+EXEC='1d_omp_simd'
 
-THREAD_CALC=8
-until [ $THREAD_CALC -gt 70 ]
+THREAD_CALC=56
+until [ $THREAD_CALC -gt 56 ]
 do
     N_THREADS=${THREAD_CALC}
     ((THREAD_CALC++))
 
-    N_BASE=100
+    N_BASE=2000
     TIME=1
     until [ $TIME -gt 1 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=8
-        until [ $POWER -gt 8 ]
+        POWER=14
+        until [ $POWER -gt 17 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
