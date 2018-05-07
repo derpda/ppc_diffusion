@@ -1,18 +1,18 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:20:00'
-EXEC='1d_plain'
+H_RT='00:10:00'
+EXEC='3d_omp'
 
-THREAD_CALC=1
-until [ $THREAD_CALC -gt 1 ]
+THREAD_CALC=8
+until [ $THREAD_CALC -gt 70 ]
 do
     N_THREADS=${THREAD_CALC}
     ((THREAD_CALC++))
 
     N_BASE=100
-    TIME=7
-    until [ $TIME -gt 10 ]
+    TIME=20
+    until [ $TIME -gt 20 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
@@ -36,7 +36,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job | qsub -g tga-ppcomp
+            }' ./src/blank_job | qsub #-g tga-ppcomp
         done
     done
 done
