@@ -12,7 +12,9 @@ SRC_DIR=src
 BASE_1D=${OBJ_DIR}/1d_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/1d_utils.o
 BASE_3D=${OBJ_DIR}/3d_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/3d_utils.o
 
-EXEC=3d_plain 3d_omp 1d_plain 1d_omp 1d_omp_blocking 1d_omp_simd cuda
+EXEC=3d_plain 3d_omp 3d_omp_simd\
+	 1d_plain 1d_omp 1d_omp_blocking 1d_omp_simd\
+	 cuda
 
 all: ${EXEC}
 
@@ -29,6 +31,9 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cu
 	${CC} $^ ${LIB} -o $@ ${LDFLAGS}
 
 3d_omp: ${BASE_3D} ${OBJ_DIR}/3d_omp.o
+	${CC} $^ ${LIB} -o $@ ${LDFLAGS}
+
+3d_omp_simd: ${BASE_3D} ${OBJ_DIR}/3d_omp_simd.o
 	${CC} $^ ${LIB} -o $@ ${LDFLAGS}
 
 1d_plain: ${BASE_1D} ${OBJ_DIR}/1d_plain.o

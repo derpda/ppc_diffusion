@@ -6,4 +6,4 @@
 #$ -o output_omp.$JOB_ID
 #$ -e error_omp.$JOB_ID
 
-./omp 2000 8192 8192
+./3d_omp 2000 2048 2048

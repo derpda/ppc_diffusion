@@ -2,22 +2,30 @@
 
 NODE='f_node'
 H_RT='00:10:00'
-EXEC='1d_omp'
+EXEC='3d_omp_simd'
 
-N_THREADS=56
-until [ $N_THREADS -lt 7 ]
+THREAD_CALC=56
+until [ $THREAD_CALC -lt 7 ]
 do
+    N_THREADS=${THREAD_CALC}
+    ((THREAD_CALC=THREAD_CALC/2))
+
     N_BASE=100
-    TIME=11
+    TIME=1
     until [ $TIME -gt 20 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
+        ((TIME++))
+
         POWER=8
         until [ $POWER -gt 13 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
+            ((POWER++))
+
             JOB="${NODE}.${N_STEPS}.${NX}.${N_THREADS}"
+            [ -e output_files/${EXEC}.${JPB} ] && rm -i output_files/${EXEC}.${JOB}
             awk '{
                 gsub("{NODE}","'$NODE'");
                 gsub("{H_RT}","'$H_RT'");
@@ -29,10 +37,7 @@ do
                 gsub("{EXEC}","'$EXEC'");
                 print $0
             }' ./src/blank_job | qsub #-g tga-ppcomp
-            ((POWER++))
         done
-        ((TIME++))
     done
-    ((N_THREADS=N_THREADS/2))
 done
 

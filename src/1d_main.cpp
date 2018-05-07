@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include <immintrin.h>
-#include <malloc.h>
 
 
 float* alloc_mem(size_t NX, size_t NY);
@@ -17,7 +15,6 @@ int free_mem(float*, size_t NY);
 int process_args(int argc, char *argv[], size_t &NX, size_t &NY, int &n_steps);
 
 int print_gflops(struct timeval t1, struct timeval t2, size_t NX, size_t NY, int n_steps);
-
 
 int  main(int argc, char *argv[])
 {
