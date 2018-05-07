@@ -1,24 +1,24 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:30:00'
-EXEC='cuda'
+H_RT='00:10:00'
+EXEC='3d_omp'
 
-THREAD_CALC=4
-until [ $THREAD_CALC -gt 4 ]
+THREAD_CALC=56
+until [ $THREAD_CALC -gt 56 ]
 do
     N_THREADS=${THREAD_CALC}
     ((THREAD_CALC++))
 
-    N_BASE=2000
+    N_BASE=1000
     TIME=1
-    until [ $TIME -gt 1 ]
+    until [ $TIME -gt 20 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=8
-        until [ $POWER -gt 17 ]
+        POWER=13
+        until [ $POWER -gt 13 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
@@ -36,7 +36,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job | qsub -g tga-ppcomp
+            }' ./src/blank_job | qsub #-g tga-ppcomp
         done
     done
 done
