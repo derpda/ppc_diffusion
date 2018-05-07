@@ -2,13 +2,13 @@
 
 NODE='f_node'
 H_RT='00:10:00'
-EXEC='3d_omp'
+EXEC='1d_omp'
 
 N_THREADS=56
 until [ $N_THREADS -lt 7 ]
 do
     N_BASE=100
-    TIME=1
+    TIME=11
     until [ $TIME -gt 20 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
