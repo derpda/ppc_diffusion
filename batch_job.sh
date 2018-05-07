@@ -1,23 +1,23 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:10:00'
-EXEC='3d_omp_simd'
+H_RT='00:20:00'
+EXEC='1d_plain'
 
-THREAD_CALC=56
-until [ $THREAD_CALC -lt 7 ]
+THREAD_CALC=1
+until [ $THREAD_CALC -gt 1 ]
 do
     N_THREADS=${THREAD_CALC}
-    ((THREAD_CALC=THREAD_CALC/2))
+    ((THREAD_CALC++))
 
     N_BASE=100
-    TIME=1
-    until [ $TIME -gt 20 ]
+    TIME=7
+    until [ $TIME -gt 10 ]
     do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=8
+        POWER=13
         until [ $POWER -gt 13 ]
         do
             NX=$(echo "2^$POWER" | bc)
@@ -36,7 +36,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job | qsub #-g tga-ppcomp
+            }' ./src/blank_job | qsub -g tga-ppcomp
         done
     done
 done
