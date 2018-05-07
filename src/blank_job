@@ -2,7 +2,7 @@
 #$ -cwd
 #$ -l {NODE}=1
 #$ -l h_rt={H_RT}
-#$ -N diff_{EXEC}
+#$ -N d_{EXEC}
 #$ -o output_files/{EXEC}.{JOB}
 #$ -e error_files/{EXEC}.{JOB}
 
