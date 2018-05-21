@@ -14,3 +14,5 @@ cuda
 
 **/error_*
 output_files_backup
+
+**/*.tar.gz
