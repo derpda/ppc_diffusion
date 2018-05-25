@@ -121,34 +121,60 @@ def main():
 
     fig, ax = plt.subplots()
 
-    x_val = []
-    y_val = []
-    for key, value in files.get_gflops(
-            "omp", "f_node",
-            "N_STEPS_1000", "NX_32768", None).items():
-        x_val.append(int(key))
-        y_val.append(float(value))
-    # ax.semilogx(x_val, y_val, 'ro', basex=10, label='OpenMP')
-    ax.plot(x_val, y_val, 'ro', label='OpenMP')
+    N_STEPS = None  # "N_STEPS_2000"
+    NX = "NX_8192"
+    N_THREADS = "N_THREADS_56"
 
     x_val = []
     y_val = []
     for key, value in files.get_gflops(
-            "plain", "f_node",
-            None, "NX_4096", "N_THREADS_1").items():
+            "3d_omp", "f_node",
+            N_STEPS,
+            NX,
+            N_THREADS
+    ).items():
         x_val.append(int(key))
         y_val.append(float(value))
-    # ax.semilogx(x_val, y_val, 'bo', basex=10, label='Unmodified Code')
+    # ax.semilogx(
+    ax.plot(
+        x_val, y_val,
+        color='black',
+        marker='o',
+        linestyle='None',
+        # basex=2,
+        label='3D OpenMP'
+    )
+    x_val = []
+    y_val = []
+
+    for key, value in files.get_gflops(
+            "1d_omp", "f_node",
+            N_STEPS,
+            NX,
+            N_THREADS
+    ).items():
+        x_val.append(int(key))
+        y_val.append(float(value))
+    # ax.semilogx(
+    ax.plot(
+        x_val, y_val,
+        color='red',
+        marker='o',
+        linestyle='None',
+        # basex=2,
+        label='1D OpenMP'
+    )
 
     ax.legend()
     ax.grid()
+    ax.set_ylim([0, 25])
     ax.set(
-        xlabel='Number of threads',
+        xlabel='Amount of time steps',
         ylabel='GFlops'
     )
 
     fig.tight_layout()
-    fig.savefig("../assignment_1/tex_subfiles/omp_threads_long.pdf")
+    fig.savefig("../assignment_1/tex_subfiles/omp_long.pdf")
     plt.show()
     return 0
 
