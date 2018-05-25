@@ -7,7 +7,7 @@ alloc_mem(size_t NX, size_t NY)
   for (int i=0; i<2; ++i) {
     data[i] = (float**)malloc(NY*sizeof(float*));
     for (size_t y=0; y<NY; ++y) {
-      data[i][y] = (float*)malloc(NX*sizeof(float));
+      posix_memalign((void**)&data[i][y], (size_t)32, NX*sizeof(float));
     }
   }
   return data;

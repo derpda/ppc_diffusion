@@ -3,7 +3,8 @@
 float*
 alloc_mem(size_t NX, size_t NY)
 {
-  float *data = (float*)malloc(2*NY*NX*sizeof(float));
+  float *data;
+  posix_memalign((void**)&data, 32, 2*NY*NX*sizeof(float));
   return data;
 }
 
