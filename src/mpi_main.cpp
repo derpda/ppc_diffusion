@@ -52,8 +52,10 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  if (print_gflops(start, end, NX, NY, n_steps)) {
-    return 1;
+  if (rank == size - 1) {
+    if (print_gflops(start, end, NX, NY, n_steps)) {
+      return 1;
+    }
   }
 
   MPI_Finalize();

@@ -10,6 +10,10 @@
 module load cuda/8.0.61
 module load openmpi/2.1.2
 
-export OMP_NUM_THREADS=14
+# Visual profiler settings
+export SCOREP_ENABLE_TRACING=true
+export SCOREP_EXPERIMENT_DIRECTORY=scorep
 
-mpirun -npernode 1 -n 4 -x LD_LIBRARY_PATH ./mpi 100 65536 65536
+export OMP_NUM_THREADS=7
+
+mpirun -npernode 1 -n 4 -x LD_LIBRARY_PATH ./mpi 5000 256 256

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <algorithm>
+#include <immintrin.h>
 #include <mpi.h>
 
 void main_kernel(float* from, float* to, size_t NX, size_t y_max) {
@@ -36,25 +37,28 @@ void lower_kernel(float* from, float* to, size_t NX) {
       0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
   #pragma omp parallel for
   for (size_t x = 0; x < NX-7; x+=8) {
-    __m256 from_current = _mm256_load_ps(&from[x]);
-    const __m256 from_x_minus = _mm256_loadu_ps(&from[x - 1]);
-    const __m256 from_x_plus = _mm256_loadu_ps(&from[x + 1]);
-    const __m256 from_y_minus = _mm256_load_ps(&from[x - NX]);
-    const __m256 from_y_plus = _mm256_load_ps(&from[x + NX]);
+    __m256 from_current = _mm256_load_ps(&from[NX + x]);
+    const __m256 from_x_minus = _mm256_loadu_ps(&from[NX + x - 1]);
+    const __m256 from_x_plus = _mm256_loadu_ps(&from[NX + x + 1]);
+    const __m256 from_y_minus = _mm256_load_ps(&from[NX + x - NX]);
+    const __m256 from_y_plus = _mm256_load_ps(&from[NX + x + NX]);
 
     from_current = _mm256_add_ps(from_current, from_x_minus);
     from_current = _mm256_add_ps(from_current, from_x_plus);
     from_current = _mm256_add_ps(from_current, from_y_minus);
     from_current = _mm256_add_ps(from_current, from_y_plus);
     from_current = _mm256_mul_ps(from_current, scalar);
-    _mm256_store_ps(&to[x], from_current);
+    _mm256_store_ps(&to[NX + x], from_current);
   }
+  // reset beginning and end of line to 0
+  to[NX] = 0.0;
+  to[2*NX-1] = 0.0;
 }
 
 void upper_kernel(float* from, float* to, size_t NX, size_t y_max) {
   register const __m256 scalar = _mm256_set_ps(
       0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2);
-  size_t y_off = (y_max - 2) * NX;
+  register size_t y_off = (y_max - 2) * NX;
   #pragma omp parallel for
   for (size_t x = 0; x < NX-7; x+=8) {
     __m256 from_current = _mm256_load_ps(&from[y_off + x]);
@@ -70,6 +74,9 @@ void upper_kernel(float* from, float* to, size_t NX, size_t y_max) {
     from_current = _mm256_mul_ps(from_current, scalar);
     _mm256_store_ps(&to[y_off + x], from_current);
   }
+  // reset beginning and end of line to 0
+  to[y_off] = 0.0;
+  to[y_off+NX-1] = 0.0;
 }
 
 int calc(
@@ -110,11 +117,9 @@ int calc(
           &data[from + 1], NX-2, MPI_FLOAT,
           rank-1, 1, MPI_COMM_WORLD, &recv_lower);
     }
-#pragma omp single nowait
-    {
-      // Calculate results from this round
-      main_kernel(&data[from], &data[to], NX, y_max);
-    }
+
+    // Calculate results from this round
+    main_kernel(&data[from], &data[to], NX, y_max);
     // calculate upper
     if (rank < size - 1) {
       MPI_Status status_upper;

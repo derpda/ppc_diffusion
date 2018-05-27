@@ -1,5 +1,6 @@
+.ONESHELL:
 CC = g++
-MPICC = scorep mpicxx
+MPICC = mpicxx
 NVCC = nvcc
 CFLAGS = -std=c++11 -O2 -g -fopenmp
 CFLAGS_SIMD = -march=core-avx2
@@ -21,6 +22,9 @@ EXEC=3d_plain 3d_omp 3d_omp_simd\
 all: ${EXEC}
 
 ${OBJ_DIR}/mpi_%.o: ${SRC_DIR}/mpi_%.cpp
+	. /etc/profile.d/modules.sh
+	module load cuda
+	module load openmpi/2.1.2
 	${MPICC} ${CFLAGS} ${CFLAGS_SIMD} -c $< -o ${OBJ_DIR}/mpi_$*.o
 
 ${OBJ_DIR}/%_simd.o: ${SRC_DIR}/%_simd.cpp
@@ -30,6 +34,8 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	${CC} ${CFLAGS} -c $< -o ${OBJ_DIR}/$*.o
 
 ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cu
+	. /etc/profile.d/modules.sh
+	module load cuda
 	${NVCC} ${CUDAFLAGS} -c $< -o ${OBJ_DIR}/$*.o
 
 3d_plain: ${BASE_3D} ${OBJ_DIR}/3d_plain.o
@@ -54,10 +60,15 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cu
 	${CC} $^ ${LIBS} -o $@ ${LDFLAGS}
 
 mpi: ${OBJ_DIR}/mpi_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/mpi_utils.o\
-   		${OBJ_DIR}/mpi_kernel_simd.o
-	${MPICC} $^ ${LIBS} -o $@ ${LDFLAGS}
+   		${OBJ_DIR}/mpi_kernel.o
+	. /etc/profile.d/modules.sh
+	module load cuda
+	module load openmpi/2.1.2
+	${MPICC} $^ ${LIBS} -o $@ ${LDFLAGS} ${CFLAGS_SIMD}
 
 cuda: ${OBJ_DIR}/1d_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/cuda.o
+	. /etc/profile.d/modules.sh
+	module load cuda
 	${NVCC} ${CUDAFLAGS} $^ ${LIBS} -o $@
 
 clean:
