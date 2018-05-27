@@ -18,8 +18,6 @@ then
     N_THREADS=8
 fi
 
-#NX=8192
-
 N_NODES=7
 until [ $N_NODES -gt 7 ]
 do
@@ -38,7 +36,7 @@ do
             NX=$NY
             ((POWER++))
 
-            JOB="${NODE}.${N_NODES}.${N_STEPS}.${NX}.${NY}.${N_THREADS}"
+            JOB="${NODE}.${N_NODES}.${N_STEPS}.${NY}.${N_THREADS}"
             [ -e output_files/mpi/${EXEC}.${JOB} ] && rm -i output_files/mpi/${EXEC}.${JOB}
             awk '{
                 gsub("{NODE}","'$NODE'");
