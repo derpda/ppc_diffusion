@@ -11,56 +11,19 @@ class results_dict(defaultdict):
             files = files & self[arg]
         return files
 
-    def get_gflops(self, diff_type, node, n_steps, NX, n_threads):
-        if diff_type is None:
-            files = self.get(node, n_steps, NX, n_threads)
+    def get_gflops(self, *args):
+        if None in args:
+            none_list = [x for x in args if x is None]
+            assert len(none_list) == 1
+            index = args.index(None)
+            rest_args = [x for x in args if x is not None]
+
+            files = self.get(*rest_args)
             data = {}
             for filename in files:
-                diff_type = filename.split('.')[0]
+                diff_type = filename.split('.')[index]
                 gflops = self["ALL_FILES"][filename]
                 data[diff_type] = gflops
-        elif node is None:
-            files = self.get(diff_type, n_steps, NX, n_threads)
-            data = {}
-            for filename in files:
-                node = filename.split('.')[1]
-                gflops = self["ALL_FILES"][filename]
-                data[node] = gflops
-        elif n_steps is None:
-            files = self.get(diff_type, node, NX, n_threads)
-            data = {}
-            for filename in files:
-                n_steps = filename.split('.')[2]
-                gflops = self["ALL_FILES"][filename]
-                data[n_steps] = gflops
-        elif NX is None:
-            files = self.get(diff_type, n_steps, node, n_threads)
-            data = {}
-            for filename in files:
-                NX = filename.split('.')[3]
-                gflops = self["ALL_FILES"][filename]
-                data[NX] = gflops
-        elif n_threads is None:
-            files = self.get(diff_type, n_steps, node, NX)
-            data = {}
-            for filename in files:
-                if len(filename.split('.')) == 4:
-                    if node == 'h_node':
-                        n_threads = '28'
-                    elif node == 'f_node':
-                        n_threads = '56'
-                    else:
-                        n_threads = '1'
-                else:
-                    n_threads = filename.split('.')[4]
-                gflops = self["ALL_FILES"][filename]
-                data[n_threads] = gflops
-        else:
-            files = self.get(diff_type, n_steps, node, NX, n_threads)
-            data = {}
-            for filename in files:
-                gflops = self["ALL_FILES"][filename]
-                data = gflops
         return data
 
     def add_from_file(self, path):
