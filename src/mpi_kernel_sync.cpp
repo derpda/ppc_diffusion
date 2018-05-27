@@ -46,46 +46,32 @@ int calc(
     size_t from = y_size*NX*(t%2);
     to = y_size*NX*((t+1)%2);
     // Send lower / receive upper boundary
-    MPI_Request recv_lower;
-    MPI_Request recv_upper;
     if (rank > 0) {
-      MPI_Request request;
-      MPI_Isend(
+      MPI_Send(
           &data[from + NX + 1], NX-2, MPI_FLOAT,
-          rank-1, 0, MPI_COMM_WORLD, &request);
+          rank-1, 0, MPI_COMM_WORLD);
     }
     if (rank < size - 1) {
-      MPI_Irecv(
+      MPI_Status status;
+      MPI_Recv(
           &data[from + (y_size-1)*NX + 1], NX-2, MPI_FLOAT,
-          rank+1, 0, MPI_COMM_WORLD, &recv_upper);
+          rank+1, 0, MPI_COMM_WORLD, &status);
     }
     // Send upper / receive lower boundary
     if (rank < size - 1) {
-      MPI_Request request;
-      MPI_Isend(
+      MPI_Send(
           &data[from + (y_size-2)*NX + 1], NX-2, MPI_FLOAT,
-          rank+1, 1, MPI_COMM_WORLD, &request);
+          rank+1, 1, MPI_COMM_WORLD);
     }
     if (rank > 0) {
-      MPI_Irecv(
+      MPI_Status status;
+      MPI_Recv(
           &data[from + 1], NX-2, MPI_FLOAT,
-          rank-1, 1, MPI_COMM_WORLD, &recv_lower);
+          rank-1, 1, MPI_COMM_WORLD, &status);
     }
 
     // Calculate results from this round
-    main_kernel(&data[from], &data[to], NX, 2, y_max-2);
-    // calculate upper
-    if (rank < size - 1) {
-      MPI_Status status_upper;
-      MPI_Wait(&recv_upper, &status_upper);
-    }
-    main_kernel(&data[from], &data[to], NX, y_max-2, y_max-1);
-    // calculate lower
-    if (rank > 0) {
-      MPI_Status status_lower;
-      MPI_Wait(&recv_lower, &status_lower);
-    }
-    main_kernel(&data[from], &data[to], NX, 1, 2);
+    main_kernel(&data[from], &data[to], NX, 1, y_max-1);
   }
 #if 0
   if (rank == size - 1) {

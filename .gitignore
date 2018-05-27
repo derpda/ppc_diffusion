@@ -1,15 +1,16 @@
 obj/*.o
 
-mpi
-cuda
-1d_plain
-1d_omp
-1d_omp_blocking
-1d_omp_simd
-3d_plain
-3d_omp
-3d_omp_blocking
-3d_omp_simd
+/mpi
+/mpi_sync
+/cuda
+/1d_plain
+/1d_omp
+/1d_omp_blocking
+/1d_omp_simd
+/3d_plain
+/3d_omp
+/3d_omp_blocking
+/3d_omp_simd
 
 **/core
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 #$ -cwd
-#$ -l q_node=4
+#$ -l q_node=2
 #$ -l h_rt=00:10:00
 #$ -N diff_mpi
 #$ -o output_mpi.$JOB_ID
@@ -10,10 +10,6 @@
 module load cuda/8.0.61
 module load openmpi/2.1.2
 
-# Visual profiler settings
-export SCOREP_ENABLE_TRACING=true
-export SCOREP_EXPERIMENT_DIRECTORY=scorep
+export OMP_NUM_THREADS=14
 
-export OMP_NUM_THREADS=7
-
-mpirun -npernode 1 -n 4 -x LD_LIBRARY_PATH ./mpi 5000 256 256
+mpirun -npernode 1 -n 2 -bind-to none -x LD_LIBRARY_PATH ./mpi 100 8192 8192

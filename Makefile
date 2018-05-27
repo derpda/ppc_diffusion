@@ -2,7 +2,7 @@
 CC = g++
 MPICC = mpicxx
 NVCC = nvcc
-CFLAGS = -std=c++11 -O2 -g -fopenmp
+CFLAGS = -std=c++11 -O2 -fopenmp
 CFLAGS_SIMD = -march=core-avx2
 CUDAFLAGS = -std=c++11 -gencode=arch=compute_60,code=sm_60 -O3 -Xcompiler -fopenmp
 LDFLAGS = -fopenmp
@@ -16,7 +16,7 @@ BASE_3D=${OBJ_DIR}/3d_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/3d_utils.o
 
 EXEC=3d_plain 3d_omp 3d_omp_simd\
 	 1d_plain 1d_omp 1d_omp_blocking 1d_omp_simd\
-	 mpi\
+	 mpi mpi_sync\
 	 cuda
 
 all: ${EXEC}
@@ -61,6 +61,13 @@ ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cu
 
 mpi: ${OBJ_DIR}/mpi_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/mpi_utils.o\
    		${OBJ_DIR}/mpi_kernel.o
+	. /etc/profile.d/modules.sh
+	module load cuda
+	module load openmpi/2.1.2
+	${MPICC} $^ ${LIBS} -o $@ ${LDFLAGS} ${CFLAGS_SIMD}
+
+mpi_sync: ${OBJ_DIR}/mpi_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/mpi_utils.o\
+   		${OBJ_DIR}/mpi_kernel_sync.o
 	. /etc/profile.d/modules.sh
 	module load cuda
 	module load openmpi/2.1.2

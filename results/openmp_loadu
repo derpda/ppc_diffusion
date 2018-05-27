@@ -1,0 +1,7 @@
+1d_omp_simd.f_node.1000.4096.56	13.714
+1d_omp_simd.f_node.1000.16384.56	24.044
+1d_omp_simd.f_node.1000.8192.56	20.980
+1d_omp_simd.f_node.1000.256.56	0.679
+1d_omp_simd.f_node.1000.1024.56	10.221
+1d_omp_simd.f_node.1000.2048.56	29.422
+1d_omp_simd.f_node.1000.512.56	2.875
