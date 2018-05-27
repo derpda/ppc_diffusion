@@ -5,7 +5,7 @@ from collections import defaultdict
 
 class results_dict(defaultdict):
     def get(self, *args):
-        data = self["ALL_FILES"]
+        data = self["ALL_FILES"].keys()
         for arg in args:
             data = data & self[arg]
         return data
@@ -84,40 +84,46 @@ class results_dict(defaultdict):
                 data = gflops
         return data
 
-    def add_from_path(self, path):
+    def add_from_file(self, path):
         self.path = path
-        for filename in os.listdir(path):
-            self["ALL_FILES"].add(path+filename)
-            diff_type = filename.split('.')[0]
-            self[diff_type].add(path+filename)
-            node = filename.split('.')[1]
-            self[node].add(path+filename)
-            n_steps = filename.split('.')[2]
-            self["N_STEPS_"+n_steps].add(path+filename)
-            nx = filename.split('.')[3]
-            self["NX_"+nx].add(path+filename)
-            if len(filename.split('.')) == 4:
-                if node == 'h_node':
-                    n_threads = '28'
-                elif node == 'f_node':
-                    n_threads = '56'
+        self["ALL_FILES"] = {}
+        with open(path, "r") as handle:
+            content = handle.readline()
+            while (content != ""):
+                filename = content.split('\t')[0]
+                gflops = content.split('\t')[1]
+                self["ALL_FILES"][path+filename] = gflops
+                diff_type = filename.split('.')[0]
+                self[diff_type].add(path+filename)
+                node = filename.split('.')[1]
+                self[node].add(path+filename)
+                n_steps = filename.split('.')[2]
+                self["N_STEPS_"+n_steps].add(path+filename)
+                nx = filename.split('.')[3]
+                self["NX_"+nx].add(path+filename)
+                if len(filename.split('.')) == 4:
+                    if node == 'h_node':
+                        n_threads = '28'
+                    elif node == 'f_node':
+                        n_threads = '56'
+                    else:
+                        n_threads = '1'
                 else:
-                    n_threads = '1'
-            else:
-                n_threads = filename.split('.')[4]
-            self["N_THREADS_"+n_threads].add(path+filename)
+                    n_threads = filename.split('.')[4]
+                self["N_THREADS_"+n_threads].add(path+filename)
+                content = handle.readline()
 
 
 def load_files(rel_path):
     data = results_dict(set)
     base_path = os.path.dirname(os.path.realpath(__file__))
     path = base_path + '/' + rel_path + '/'
-    data.add_from_path(path)
+    data.add_from_file(path)
     return data
 
 
 def main():
-    files = load_files('../output_files')
+    files = load(sys.argv[1])
 
     fig, ax = plt.subplots()
 
@@ -175,7 +181,7 @@ def main():
 
     fig.tight_layout()
     fig.savefig("../assignment_1/tex_subfiles/omp_long.pdf")
-    plt.show()
+    #plt.show()
     return 0
 
 
