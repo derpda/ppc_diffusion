@@ -16,7 +16,7 @@ int process_args(int argc, char *argv[], size_t &NX, size_t &NY, int &n_steps);
 
 int print_gflops(struct timeval t1, struct timeval t2, size_t NX, size_t NY, int n_steps);
 
-int  main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   struct timeval t1, t2;
   int n_steps;

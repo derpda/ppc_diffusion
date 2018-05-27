@@ -26,8 +26,8 @@ calc(float* data, size_t NX, size_t NY, int n_steps)
         __m256 from_current = _mm256_load_ps(&data[from + current]);
         const __m256 from_x_minus = _mm256_loadu_ps(&data[from + current - 1]);
         const __m256 from_x_plus = _mm256_loadu_ps(&data[from + current + 1]);
-        const __m256 from_y_minus = _mm256_loadu_ps(&data[from + current - NX]);
-        const __m256 from_y_plus = _mm256_loadu_ps(&data[from + current + NX]);
+        const __m256 from_y_minus = _mm256_load_ps(&data[from + current - NX]);
+        const __m256 from_y_plus = _mm256_load_ps(&data[from + current + NX]);
 
         from_current = _mm256_add_ps(from_current, from_x_minus);
         from_current = _mm256_add_ps(from_current, from_x_plus);

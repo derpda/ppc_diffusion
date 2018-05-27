@@ -39,7 +39,6 @@ process_args(int argc, char *argv[], size_t &NX, size_t &NY, int &n_steps)
       std::cerr << "\t" << "NX" << "\t" << "NY" << std::endl;
       return 1;
   }
-
 }
 
 /* in microseconds (us) */
@@ -57,9 +56,20 @@ print_gflops(struct timeval t1, struct timeval t2, size_t NX, size_t NY, int n_s
 
   us = get_elapsed_time(&t1, &t2);
   printf("Elapsed time: %.3lf sec\n", us/1000000.0);
-  gflops = ((double)NX * NY * n_steps * op_per_point) / us / 1000.0;
+  gflops = ((double)NX * NY * n_steps * op_per_point) / 1000.0 / us;
   printf("Speed: %.3lf GFlops\n", gflops);
   return 0;
 }
 
+int
+print_gflops(double start, double end, size_t NX, size_t NY, int n_steps) {
+  double s;
+  double gflops;
+  int op_per_point = 5; // 4 add & 1 multiply per point
 
+  s = end - start;
+  printf("Elapsed time: %.3lf sec\n", s);
+  gflops = ((double)NX * NY * n_steps * op_per_point) / 1000.0 / s / 1000000.0;
+  printf("Speed: %.3lf GFlops\n", gflops);
+  return 0;
+}
