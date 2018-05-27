@@ -29,8 +29,8 @@ do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=13
-        until [ $POWER -gt 18 ]
+        POWER=12
+        until [ $POWER -gt 12 ]
         do
             NY=$(echo "2^$POWER" | bc)
             NX=$NY
