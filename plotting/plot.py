@@ -5,10 +5,13 @@ from collections import defaultdict
 
 
 class results_dict(defaultdict):
-    def get(self, *args):
+    def get(self, skip, *args):
         files = self["ALL_FILES"].keys()
-        for arg in args:
-            files = files & self[arg]
+        for index in range(len(args)):
+            arg = args[index]
+            if index >= skip:
+                index += 1
+            files = files & self["ATTR" + str(index) + "_" + arg]
         return files
 
     def get_gflops(self, *args):
@@ -18,12 +21,15 @@ class results_dict(defaultdict):
             index = args.index(None)
             rest_args = [x for x in args if x is not None]
 
-            files = self.get(*rest_args)
+            files = self.get(index, *rest_args)
             data = {}
             for filename in files:
                 diff_type = filename.split('.')[index]
                 gflops = self["ALL_FILES"][filename]
                 data[diff_type] = gflops
+        else:
+            filename = self.get(*args)[0]
+            data = self["ALL_FILES"][filename]
         return data
 
     def add_from_file(self, path):
@@ -35,24 +41,9 @@ class results_dict(defaultdict):
                 filename = content.split('\t')[0]
                 gflops = content.split('\t')[1].strip()
                 self["ALL_FILES"][filename] = gflops
-                diff_type = filename.split('.')[0]
-                self[diff_type].add(filename)
-                node = filename.split('.')[1]
-                self[node].add(filename)
-                n_steps = filename.split('.')[2]
-                self["N_STEPS_"+n_steps].add(filename)
-                nx = filename.split('.')[3]
-                self["NX_"+nx].add(filename)
-                if len(filename.split('.')) == 4:
-                    if node == 'h_node':
-                        n_threads = '28'
-                    elif node == 'f_node':
-                        n_threads = '56'
-                    else:
-                        n_threads = '1'
-                else:
-                    n_threads = filename.split('.')[4]
-                self["N_THREADS_"+n_threads].add(filename)
+                for i in range(len(filename.split('.'))):
+                    attr = filename.split('.')[i]
+                    self["ATTR" + str(i) + "_" + attr].add(filename)
                 content = handle.readline()
 
 
@@ -69,61 +60,58 @@ def main():
 
     fig, ax = plt.subplots()
 
-    N_STEPS = None  # "N_STEPS_2000"
-    NX = "NX_8192"
-    N_THREADS = "N_THREADS_56"
+    args = [
+        "",  # EXEC
+        "f_node",  # NODE
+        "8",  # N_NODES
+        "100",  # N_STEPS
+        None,  # NX
+        "56"  # N_THREADS
+    ]
 
     x_val = []
     y_val = []
-    for key, value in files.get_gflops(
-            "3d_omp", "f_node",
-            N_STEPS,
-            NX,
-            N_THREADS
-    ).items():
+    args[0] = "mpi"
+    for key, value in files.get_gflops(*args).items():
         x_val.append(int(key))
         y_val.append(float(value))
-    # ax.semilogx(
-    ax.plot(
+    ax.semilogx(
+        # ax.plot(
         x_val, y_val,
         color='black',
         marker='o',
         linestyle='None',
-        # basex=2,
-        label='3D OpenMP'
+        basex=2,
+        label='Non-blocking calls'
     )
     x_val = []
     y_val = []
 
-    for key, value in files.get_gflops(
-            "1d_omp", "f_node",
-            N_STEPS,
-            NX,
-            N_THREADS
-    ).items():
+    args[0] = "mpi_sync"
+    for key, value in files.get_gflops(*args).items():
         x_val.append(int(key))
         y_val.append(float(value))
-    # ax.semilogx(
-    ax.plot(
+    ax.semilogx(
+        # ax.plot(
         x_val, y_val,
         color='red',
         marker='o',
         linestyle='None',
-        # basex=2,
-        label='1D OpenMP'
+        basex=2,
+        label='Blocking calls'
     )
 
     ax.legend()
     ax.grid()
-    ax.set_ylim([0, 25])
+    # ax.set_ylim([0, 25])
     ax.set(
-        xlabel='Amount of time steps',
+        xlabel='N of square N by N matrix',
         ylabel='GFlops'
     )
 
     fig.tight_layout()
-    # fig.savefig("../assignment_1/tex_subfiles/omp_long.pdf")
-    plt.show()
+    fig.savefig("../assignment_2/tex_subfiles/mpi_nx.pdf")
+    # plt.show()
     return 0
 
 
