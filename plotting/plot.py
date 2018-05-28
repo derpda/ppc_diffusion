@@ -60,18 +60,20 @@ def main():
 
     fig, ax = plt.subplots()
 
+    # This list informs the program of the shape of the input filenames.
+    # Setting one of them as None makes it the variable for which to plot the
+    # gflops. Modify this when the filename syntax changes
     args = [
-        "",  # EXEC
+        "1d_omp_simd",  # EXEC
         "f_node",  # NODE
-        "8",  # N_NODES
-        "100",  # N_STEPS
+        "5000",  # N_STEPS
         None,  # NX
         "56"  # N_THREADS
     ]
 
     x_val = []
     y_val = []
-    args[0] = "mpi"
+    args[0] = "1d_omp_simd"
     for key, value in files.get_gflops(*args).items():
         x_val.append(int(key))
         y_val.append(float(value))
@@ -82,12 +84,12 @@ def main():
         marker='o',
         linestyle='None',
         basex=2,
-        label='Non-blocking calls'
+        label='Aligned SIMD loads/stores'
     )
     x_val = []
     y_val = []
 
-    args[0] = "mpi_sync"
+    args[0] = "3d_omp_simd"
     for key, value in files.get_gflops(*args).items():
         x_val.append(int(key))
         y_val.append(float(value))
@@ -98,7 +100,7 @@ def main():
         marker='o',
         linestyle='None',
         basex=2,
-        label='Blocking calls'
+        label='Unaligned SIMD loads/stores'
     )
 
     ax.legend()
@@ -110,7 +112,7 @@ def main():
     )
 
     fig.tight_layout()
-    fig.savefig("../assignment_2/tex_subfiles/mpi_nx.pdf")
+    fig.savefig("../assignment_2/tex_subfiles/openmp_load_loadu_O2.pdf")
     # plt.show()
     return 0
 
