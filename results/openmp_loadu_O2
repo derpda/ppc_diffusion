@@ -1,0 +1,14 @@
+1d_omp_simd.f_node.5000.4096.56	24.186
+1d_omp_simd.f_node.5000.512.56	4.807
+1d_omp_simd.f_node.1000.4096.56	13.714
+1d_omp_simd.f_node.1000.16384.56	24.044
+1d_omp_simd.f_node.5000.16384.56	21.080
+1d_omp_simd.f_node.5000.1024.56	16.878
+1d_omp_simd.f_node.5000.8192.56	23.356
+1d_omp_simd.f_node.1000.8192.56	20.980
+1d_omp_simd.f_node.1000.256.56	0.679
+1d_omp_simd.f_node.1000.1024.56	10.221
+1d_omp_simd.f_node.5000.2048.56	50.176
+1d_omp_simd.f_node.1000.2048.56	29.422
+1d_omp_simd.f_node.5000.256.56	2.074
+1d_omp_simd.f_node.1000.512.56	2.875
