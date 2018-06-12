@@ -1,8 +1,8 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:10:00'
-EXEC='mpi_sync'
+H_RT='00:05:00'
+EXEC='mpi'
 
 if [ $NODE == 'f_node' ]
 then
@@ -18,10 +18,10 @@ then
     N_THREADS=8
 fi
 
-N_NODES=7
-until [ $N_NODES -gt 7 ]
+N_NODES=16
+until [ $N_NODES -gt 39 ]
 do
-    ((N_NODES++))
+    ((N_NODES=N_NODES+4))
     N_BASE=100
     TIME=1
     until [ $TIME -gt 1 ]
@@ -29,8 +29,8 @@ do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=12
-        until [ $POWER -gt 12 ]
+        POWER=17
+        until [ $POWER -gt 17 ]
         do
             NY=$(echo "2^$POWER" | bc)
             NX=$NY

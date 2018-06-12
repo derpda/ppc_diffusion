@@ -10,7 +10,7 @@ do
     N_THREADS=${THREAD_CALC}
     ((THREAD_CALC++))
 
-    N_BASE=1000
+    N_BASE=5000
     TIME=1
     until [ $TIME -gt 1 ]
     do

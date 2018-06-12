@@ -3,7 +3,7 @@
 #$ -l {NODE}=1
 #$ -l h_rt={H_RT}
 #$ -N d_{EXEC}
-#$ -o output_files/openmp/{EXEC}.{JOB}
+#$ -o output_files/openmp_load_O2/{EXEC}.{JOB}
 #$ -e error_files/openmp/{EXEC}.{JOB}
 
 . /etc/profile.d/modules.sh
