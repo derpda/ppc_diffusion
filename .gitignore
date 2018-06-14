@@ -3,7 +3,7 @@ obj/*.o
 /mpi
 /mpi_sync
 /cuda
-/cuda_split
+/cuda_dual
 /1d_plain
 /1d_omp
 /1d_omp_blocking
