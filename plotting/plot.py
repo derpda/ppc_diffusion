@@ -64,7 +64,7 @@ def main():
     # Setting one of them as None makes it the variable for which to plot the
     # gflops. Modify this when the filename syntax changes
     args = [
-        "1d_omp_simd",  # EXEC
+        "cuda",  # EXEC
         "f_node",  # NODE
         "5000",  # N_STEPS
         None,  # NX
@@ -73,7 +73,7 @@ def main():
 
     x_val = []
     y_val = []
-    args[0] = "1d_omp_simd"
+    args[0] = "cuda"
     for key, value in files.get_gflops(*args).items():
         x_val.append(int(key))
         y_val.append(float(value))
@@ -84,12 +84,13 @@ def main():
         marker='o',
         linestyle='None',
         basex=2,
-        label='Aligned SIMD loads/stores'
+        label='Single-stream'
     )
     x_val = []
     y_val = []
 
-    args[0] = "3d_omp_simd"
+    files = load(sys.argv[2])
+    args[0] = "cuda_split"
     for key, value in files.get_gflops(*args).items():
         x_val.append(int(key))
         y_val.append(float(value))
@@ -100,7 +101,7 @@ def main():
         marker='o',
         linestyle='None',
         basex=2,
-        label='Unaligned SIMD loads/stores'
+        label='Dual-stream'
     )
 
     ax.legend()
@@ -112,7 +113,7 @@ def main():
     )
 
     fig.tight_layout()
-    fig.savefig("../assignment_2/tex_subfiles/openmp_load_loadu_O2.pdf")
+    fig.savefig("../assignment_3/tex_subfiles/cuda_single_vs_dual.pdf")
     # plt.show()
     return 0
 
