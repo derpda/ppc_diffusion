@@ -17,7 +17,7 @@ BASE_3D=${OBJ_DIR}/3d_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/3d_utils.o
 EXEC=3d_plain 3d_omp 3d_omp_simd\
 	 1d_plain 1d_omp 1d_omp_blocking 1d_omp_simd\
 	 mpi mpi_sync\
-	 cuda
+	 cuda cuda_split
 
 all: ${EXEC}
 
@@ -74,6 +74,11 @@ mpi_sync: ${OBJ_DIR}/mpi_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/mpi_utils.o\
 	${MPICC} $^ ${LIBS} -o $@ ${LDFLAGS} ${CFLAGS_SIMD}
 
 cuda: ${OBJ_DIR}/1d_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/cuda.o
+	. /etc/profile.d/modules.sh
+	module load cuda
+	${NVCC} ${CUDAFLAGS} $^ ${LIBS} -o $@
+
+cuda_split: ${OBJ_DIR}/1d_main.o ${OBJ_DIR}/utils.o ${OBJ_DIR}/cuda_split.o
 	. /etc/profile.d/modules.sh
 	module load cuda
 	${NVCC} ${CUDAFLAGS} $^ ${LIBS} -o $@
