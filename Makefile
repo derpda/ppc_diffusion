@@ -4,7 +4,7 @@ MPICC = mpicxx
 NVCC = nvcc
 CFLAGS = -std=c++11 -O2 -fopenmp
 CFLAGS_SIMD = -march=core-avx2
-CUDAFLAGS = -std=c++11 -gencode=arch=compute_60,code=sm_60 -O3 -Xcompiler -fopenmp
+CUDAFLAGS = -std=c++11 -gencode=arch=compute_60,code=sm_60 -O2 -Xcompiler -fopenmp
 LDFLAGS = -fopenmp
 LIBS =
 

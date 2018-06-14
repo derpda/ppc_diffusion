@@ -16,7 +16,7 @@ init(float* data, size_t NX, size_t NY)
 {
   size_t cx = NX/2, cy = 0; /* center of ink */
   size_t rad = (NX+NY)/8; /* radius of ink */
-#pragma omp parallel shared(cx, rad, cy)
+#pragma omp parallel
   for(size_t y = 0; y < NY; y++) {
     for(size_t x = 0; x < NX; x++) {
       float v;

@@ -1,0 +1,9 @@
+cuda_split.f_node.5000.32768.56	798.319
+cuda_split.f_node.5000.16384.56	393.343
+cuda_split.f_node.5000.1024.56	1.714
+cuda_split.f_node.5000.512.56	0.418
+cuda_split.f_node.5000.8192.56	107.167
+cuda_split.f_node.5000.2048.56	6.631
+cuda_split.f_node.5000.4096.56	26.013
+cuda_split.f_node.5000.65536.56	849.906
+cuda_split.f_node.5000.256.56	0.104

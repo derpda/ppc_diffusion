@@ -2,7 +2,7 @@
 
 NODE='f_node'
 H_RT='00:10:00'
-EXEC='1d_omp_simd'
+EXEC='cuda_split'
 
 THREAD_CALC=56
 until [ $THREAD_CALC -gt 56 ]
@@ -17,8 +17,8 @@ do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=8
-        until [ $POWER -gt 14 ]
+        POWER=16
+        until [ $POWER -gt 16 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
