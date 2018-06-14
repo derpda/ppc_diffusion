@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NODE='f_node'
-H_RT='00:10:00'
+H_RT='01:00:00'
 EXEC='cuda_split'
 
 THREAD_CALC=56
@@ -17,8 +17,8 @@ do
         N_STEPS=$((${N_BASE}*${TIME}))
         ((TIME++))
 
-        POWER=16
-        until [ $POWER -gt 16 ]
+        POWER=17
+        until [ $POWER -gt 17 ]
         do
             NX=$(echo "2^$POWER" | bc)
             NY=$NX
@@ -36,7 +36,7 @@ do
                 gsub("{NY}","'$NY'");
                 gsub("{EXEC}","'$EXEC'");
                 print $0
-            }' ./src/blank_job | qsub #-g tga-ppcomp
+            }' ./src/blank_job | qsub -g tga-ppcomp
         done
     done
 done
